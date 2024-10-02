@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
@@ -15,15 +16,16 @@ import 'emoji/travel.dart';
 
 /// This is the emoji page. This holds all the emoji grids.
 class EmojiPage extends StatefulWidget {
-  EmojiPage(
-      {Key? key,
-      required this.emojiKeyboardHeight,
-      required this.bromotionController,
-      required this.emojiScrollShowBottomBar,
-      required this.insertText,
-      required this.switchedPage,
-      required this.recent})
-      : super(key: key);
+  EmojiPage({
+    Key? key,
+    required this.emojiKeyboardHeight,
+    required this.bromotionController,
+    required this.emojiScrollShowBottomBar,
+    required this.insertText,
+    required this.switchedPage,
+    required this.recent,
+    this.onEmojisGenerated, // Añade este parámetro
+  }) : super(key: key);
 
   final double emojiKeyboardHeight;
   final TextEditingController bromotionController;
@@ -31,6 +33,9 @@ class EmojiPage extends StatefulWidget {
   final Function(String, int) insertText;
   final Function(int) switchedPage;
   final List<String> recent;
+
+  // Nuevo parámetro para el callback
+  final Function(List<String>)? onEmojisGenerated;
 
   @override
   EmojiPageState createState() => EmojiPageState();
@@ -65,6 +70,9 @@ class EmojiPageState extends State<EmojiPage> {
   TextEditingController? bromotionController;
 
   bool showBottomBar = true;
+
+  // Variable de estado para almacenar los 16 emojis aleatorios
+  List<String> randomEmojisList = [];
 
   @override
   void initState() {
@@ -163,6 +171,47 @@ class EmojiPageState extends State<EmojiPage> {
         checkComponentsSmileys(this.smileys);
       });
     }
+  }
+
+  /// Genera una lista de 16 emojis aleatorios de todas las categorías cargadas.
+  List<dynamic> generateRandomEmojis() {
+    List<dynamic> allEmojis = [];
+
+    // Combina todos los emojis de las diferentes categorías.
+    allEmojis.addAll(widget.recent);
+    allEmojis.addAll(smileys);
+    allEmojis.addAll(animals);
+    allEmojis.addAll(foods);
+    allEmojis.addAll(activities);
+    allEmojis.addAll(travel);
+    allEmojis.addAll(objects);
+    allEmojis.addAll(symbols);
+    allEmojis.addAll(flags);
+
+    // Elimina duplicados si es necesario.
+    allEmojis = allEmojis.toSet().toList();
+
+    // Verifica que hay suficientes emojis.
+    if (allEmojis.length <= 16) {
+      randomEmojisList = List.from(allEmojis);
+    } else {
+      // Selecciona 16 emojis aleatorios sin repetición.
+      final random = Random();
+      randomEmojisList = [];
+
+      // Utiliza un conjunto para evitar selecciones duplicadas.
+      Set<int> selectedIndices = {};
+
+      while (randomEmojisList.length < 16) {
+        int index = random.nextInt(allEmojis.length);
+        if (!selectedIndices.contains(index)) {
+          selectedIndices.add(index);
+          randomEmojisList.add(allEmojis[index]);
+        }
+      }
+    }
+
+    return randomEmojisList;
   }
 
   /// Here we load the smiley emojis and filter out the ones we can't show

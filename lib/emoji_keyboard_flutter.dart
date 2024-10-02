@@ -17,3 +17,14 @@
 library emoji_keyboard_flutter;
 
 export 'src/emoji_keyboard.dart';
+export 'src/emoji_utils.dart';
+// flutter_emoji_keyboard/lib/emoji_lists.dart
+export 'src/emoji/smileys.dart';
+export 'src/emoji/animals.dart';
+export 'src/emoji/foods.dart';
+export 'src/emoji/activities.dart';
+export 'src/emoji/travel.dart';
+export 'src/emoji/objects.dart';
+export 'src/emoji/symbols.dart';
+export 'src/emoji/flags.dart';
+

@@ -37,7 +37,6 @@ class EmojiKeyboard extends StatefulWidget {
   EmojiBoard createState() => EmojiBoard();
 }
 
-
 /// The emojiboard has a configurable textfield which is will control
 /// It has a configurable height and it can be made visible or invisible
 /// using the showKeyboard boolean
@@ -74,6 +73,9 @@ class EmojiBoard extends State<EmojiKeyboard> {
   List<String> recentEmojis = [];
 
   Storage storage = Storage();
+
+  // Variable de estado para almacenar los 16 emojis aleatorios
+  List<String> randomEmojisList = [];
 
   @override
   void initState() {
@@ -290,7 +292,6 @@ class EmojiBoard extends State<EmojiKeyboard> {
     }
   }
 
-
   /// This function is called when we want to see if any of the recent emojis
   /// that the user used can be shown in this Android version.
   isAvailable(recentEmojis) {
@@ -328,7 +329,6 @@ class EmojiBoard extends State<EmojiKeyboard> {
       widget.onEmojiSelected!(myText);
     }
   }
-
 
   bool isPortrait() {
     return MediaQuery.of(context).orientation == Orientation.portrait;
