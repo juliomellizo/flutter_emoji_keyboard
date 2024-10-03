@@ -1,25 +1,25 @@
 class Emoji {
+  int? id;
   late String emoji;
   late int amount;
 
-  Emoji(String emoji, int amount) {
-    this.emoji = emoji;
-    this.amount = amount;
-  }
+  Emoji(this.emoji, this.amount, {this.id});
 
-  increase() {
+  void increase() {
     this.amount += 1;
   }
 
   Map<String, dynamic> toDbMap() {
-    var map = Map<String, dynamic>();
-    map['emoji'] = emoji;
-    map['amount'] = amount;
-    return map;
+    return {
+      'id': id,
+      'emoji': emoji,
+      'amount': amount,
+    };
   }
 
   Emoji.fromDbMap(Map<String, dynamic> map) {
-    emoji = map['emoji'];
-    amount = map['amount'];
+    id = map['id'] as int?;
+    emoji = map['emoji'] as String;
+    amount = map['amount'] as int;
   }
 }

@@ -1,125 +1,63 @@
 import 'package:flutter/material.dart';
-import 'emoji_category_key.dart';
 
-/// This is the Category bar. Here the user can select any of the 9 categories
+/// Barra de categorías de emojis.
 class CategoryBar extends StatefulWidget {
-  final Function(int) categoryHandler;
+  final Function(int) onCategorySelected;
   final bool darkMode;
 
-  const CategoryBar(
-      {Key? key, required this.categoryHandler, required this.darkMode})
-      : super(key: key);
+  const CategoryBar({
+    Key? key,
+    required this.onCategorySelected,
+    required this.darkMode,
+  }) : super(key: key);
 
   @override
   CategoryBarState createState() => CategoryBarState();
 }
 
-/// There are 8 emoji categories and a "recent" tab for the 9 categories total
-/// Each category can be selected and it will jump to the corresponding category
-/// The user can also switch to any category to the left or right of the current
-/// category by swiping in that direction.
-/// A difference in styling will indicate which category is selected.
-/// The icons for the categories are also defined here.
 class CategoryBarState extends State<CategoryBar> {
-  int categorySelected = 1;
-  double emojiCategoryHeight = 50;
+  int selectedCategory = 0;
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  /// If the user presses a emoji category key this function is called
-  /// with the corresponding category number.
-  /// The correct category is shown in the category bar and a trigger is
-  /// send to the emoji page to show the page corresponding to the category.
-  void onCategorySelect(int category) {
-    widget.categoryHandler(category);
-    if (categorySelected != category) {
-      setState(() {
-        categorySelected = category;
-      });
-    }
-  }
-
-  /// If the user swipes left or right in the emoji page the category changes.
-  /// When that happens a trigger is send here to update the category bar
-  /// to show the correct category corresponding to the page
-  void updateCategoryBar(int categoryNumber) {
-    if (categoryNumber != categorySelected) {
-      setState(() {
-        categorySelected = categoryNumber;
-      });
-    }
+  // Actualizar categoría seleccionada externamente
+  void updateSelectedCategory(int index) {
+    setState(() => selectedCategory = index);
   }
 
   @override
   Widget build(BuildContext context) {
+    final categories = [
+      // Icons.access_time,
+      Icons.tag_faces,
+      Icons.pets,
+      Icons.fastfood,
+      Icons.sports_soccer,
+      Icons.directions_car,
+      Icons.lightbulb_outline,
+      Icons.euro_symbol,
+      Icons.flag,
+    ];
+
+
     return Container(
-      color: widget.darkMode ? Color(0xff171717) : Color(0xffdbdbdb),
-      height: emojiCategoryHeight,
-      width: MediaQuery.of(context).size.width,
-      child: SizedBox(
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            EmojiCategoryKey(
-              onCategorySelect: onCategorySelect,
-              category: Icons.access_time,
-              categoryNumber: 0,
-              active: categorySelected == 0,
+      color: Colors.black.withOpacity(0.8),
+      height: 50,
+      child: Row(
+        children: List.generate(categories.length, (index) {
+          return Expanded(
+            child: IconButton(
+              padding: EdgeInsets.zero, // Quitar padding para ahorrar espacio
+              iconSize: 24.0, // Ajusta este tamaño si es necesario
+              icon: Icon(
+                categories[index],
+                color: selectedCategory == index ? Colors.blue : Colors.white,
+              ),
+              onPressed: () {
+                setState(() => selectedCategory = index);
+                widget.onCategorySelected(index);
+              },
             ),
-            EmojiCategoryKey(
-              onCategorySelect: onCategorySelect,
-              category: Icons.tag_faces,
-              categoryNumber: 1,
-              active: categorySelected == 1,
-            ),
-            EmojiCategoryKey(
-              onCategorySelect: onCategorySelect,
-              category: Icons.pets,
-              categoryNumber: 2,
-              active: categorySelected == 2,
-            ),
-            EmojiCategoryKey(
-              onCategorySelect: onCategorySelect,
-              category: Icons.fastfood,
-              categoryNumber: 3,
-              active: categorySelected == 3,
-            ),
-            EmojiCategoryKey(
-              onCategorySelect: onCategorySelect,
-              category: Icons.sports_soccer,
-              categoryNumber: 4,
-              active: categorySelected == 4,
-            ),
-            EmojiCategoryKey(
-              onCategorySelect: onCategorySelect,
-              category: Icons.directions_car,
-              categoryNumber: 5,
-              active: categorySelected == 5,
-            ),
-            EmojiCategoryKey(
-              onCategorySelect: onCategorySelect,
-              category: Icons.lightbulb_outline,
-              categoryNumber: 6,
-              active: categorySelected == 6,
-            ),
-            EmojiCategoryKey(
-              onCategorySelect: onCategorySelect,
-              category: Icons.euro_symbol,
-              categoryNumber: 7,
-              active: categorySelected == 7,
-            ),
-            EmojiCategoryKey(
-              onCategorySelect: onCategorySelect,
-              category: Icons.flag,
-              categoryNumber: 8,
-              active: categorySelected == 8,
-            ),
-          ],
-        ),
+          );
+        }),
       ),
     );
   }
